@@ -1,0 +1,123 @@
+{
+    "pacientes": [
+        {
+            "nombre": "job",
+            "dni": "61964437",
+            "fecha_nacimiento": "17-05-2002",
+            "historial": [
+                {
+                    "fecha": "11-07-2025",
+                    "doctor": "daniel",
+                    "sintomas": "dolor de garganta",
+                    "tratamiento": "antiinflamatorio y panadol"
+                }
+            ]
+        },
+        {
+            "nombre": "juan",
+            "dni": "61964438",
+            "fecha_nacimiento": "10-08-2004",
+            "historial": [
+                {
+                    "fecha": "27-07-2025",
+                    "doctor": "Franco",
+                    "sintomas": "Comezon y dolor",
+                    "tratamiento": "ibuprofeno y bastante agua, desinflamatorios y chequeo facial"
+                }
+            ]
+        },
+        {
+            "nombre": "joan",
+            "dni": "52464635",
+            "fecha_nacimiento": "10-02-2000",
+            "historial": [
+                {
+                    "fecha": "25-07-2025",
+                    "doctor": "Maybe Season",
+                    "sintomas": "Dolor de estomago",
+                    "tratamiento": "Bactrin y una inyeccion contra la infeccion"
+                }
+            ]
+        },
+        {
+            "nombre": "Eker Leon",
+            "dni": "63958659",
+            "fecha_nacimiento": "10-01-2005",
+            "historial": []
+        },
+        {
+            "nombre": "Paola Chavez",
+            "dni": "49526333",
+            "fecha_nacimiento": "01-02-2001",
+            "historial": []
+        },
+        {
+            "nombre": "Maria Salas",
+            "dni": "61524584",
+            "fecha_nacimiento": "12-05-2002",
+            "historial": []
+        },
+        {
+            "nombre": "Cesar Daniel Emilio",
+            "dni": "87636354",
+            "fecha_nacimiento": "11-01-1992",
+            "historial": []
+        }
+    ],
+    "doctores": [
+        {
+            "nombre": "daniel",
+            "especialidad": "medicina general"
+        },
+        {
+            "nombre": "Franco",
+            "especialidad": "Cirujano Plastico"
+        },
+        {
+            "nombre": "Jonathan Rodriguez",
+            "especialidad": "Cardiologo"
+        },
+        {
+            "nombre": "Maybe Season",
+            "especialidad": "Gastroinsterologa"
+        },
+        {
+            "nombre": "Victor Silverio",
+            "especialidad": "Pediatría"
+        },
+        {
+            "nombre": "Carlos Monge Medrano",
+            "especialidad": "Traumatología y Ortopedia"
+        },
+        {
+            "nombre": "Uriel García Cáceres",
+            "especialidad": "Nefrología"
+        },
+        {
+            "nombre": "Hermilio Valdizán",
+            "especialidad": "Oncología"
+        },
+        {
+            "nombre": "Hugo Sifuentes",
+            "especialidad": "Pediatria"
+        },
+        {
+            "nombre": "Octavio Morales",
+            "especialidad": "Pediatra"
+        }
+    ],
+    "citas": [
+        {
+            "paciente": "job",
+            "fecha": "11-07-2025",
+            "hora": "10:00",
+            "motivo": "dolor de garganta"
+        },
+        {
+            "paciente": "Paola Chavez",
+            "fecha": "24-07-2025",
+            "hora": "10:00",
+            "motivo": "Dolor de brazo"
+        }
+    ]
+}
