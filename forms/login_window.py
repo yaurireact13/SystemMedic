@@ -100,7 +100,7 @@ class LoginWindow(QWidget):
         usuario = self.user_input.text()
         clave = self.password_input.text()
 
-        # Cambia estas credenciales como prefieras
+        # Centro de credenciales 
         if usuario == "yauri" and clave == "admin123":
             QMessageBox.information(self, "Éxito", "Inicio de sesión exitoso.")
             self.close()
