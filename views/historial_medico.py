@@ -5,7 +5,9 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 from data_manager import cargar_datos
 
+# Definición de la clase HistorialMedico
 class HistorialMedico(QWidget):
+    # Método constructor, inicializa la ventana y sus widgets.
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Historial Médico")
@@ -34,7 +36,7 @@ class HistorialMedico(QWidget):
         """)
         tarjeta_layout = QVBoxLayout(tarjeta)
 
-        # Título
+        # Título principal
         titulo = QLabel("Historial Médico del Paciente")
         titulo.setAlignment(Qt.AlignCenter)
         titulo.setStyleSheet("""
@@ -47,6 +49,7 @@ class HistorialMedico(QWidget):
         """)
         tarjeta_layout.addWidget(titulo)
 
+        # Input para DNI del paciente
         self.input_dni = QLineEdit()
         self.input_dni.setPlaceholderText("DNI del paciente")
         self.input_dni.setStyleSheet("""
@@ -59,6 +62,7 @@ class HistorialMedico(QWidget):
             }
         """)
 
+        # Botón para buscar historial
         self.btn_buscar = QPushButton("Buscar historial")
         self.btn_buscar.setStyleSheet("""
             QPushButton {
@@ -81,6 +85,7 @@ class HistorialMedico(QWidget):
 
         tarjeta_layout.addLayout(buscador_layout)
 
+        # Lista para mostrar el historial de consultas
         self.lista_historial = QListWidget()
         self.lista_historial.setStyleSheet("""
             QListWidget {
@@ -94,7 +99,7 @@ class HistorialMedico(QWidget):
 
         self.btn_buscar.clicked.connect(self.buscar_historial)
 
-        # Botón Exportar
+        # Botón para exportar el historial a Excel
         self.btn_exportar = QPushButton("Exportar a Excel")
         self.btn_exportar.setStyleSheet("""
             QPushButton {
@@ -122,22 +127,31 @@ class HistorialMedico(QWidget):
         layout_exterior.addWidget(tarjeta)
         layout_exterior.addStretch()
         self.setLayout(layout_exterior)
+
+    # Método para exportar el historial médico a un archivo Excel.
     def exportar_historial(self):
         from PyQt5.QtWidgets import QMessageBox
         import openpyxl
+
         dni = self.input_dni.text().strip()
         pacientes, _, _ = cargar_datos()
+
+        # Buscar paciente por DNI
         paciente = next((p for p in pacientes if hasattr(p, 'dni') and (p.dni == dni or getattr(p, '_Paciente__dni', None) == dni)), None)
+
         if not paciente:
             QMessageBox.warning(self, "Error", "Paciente no encontrado.")
             return
         if not paciente._Paciente__historial:
             QMessageBox.warning(self, "Error", "Sin historial médico para exportar.")
             return
+
         wb = openpyxl.Workbook()
         ws = wb.active
         ws.title = "Historial Médico"
         ws.append(["Fecha", "Doctor", "Síntomas", "Tratamiento"])
+
+        # Agregar cada consulta al archivo Excel
         for consulta in paciente._Paciente__historial:
             ws.append([
                 consulta.fecha,
@@ -145,13 +159,16 @@ class HistorialMedico(QWidget):
                 consulta.sintomas,
                 consulta.tratamiento
             ])
+
         import os
         carpeta = os.path.join(os.path.dirname(__file__), '..', 'Historial')
         os.makedirs(carpeta, exist_ok=True)
         filename = os.path.join(carpeta, f"Historial_{dni}.xlsx")
         wb.save(filename)
+
         QMessageBox.information(self, "Exportación", f"Historial exportado en la carpeta Historial como {os.path.basename(filename)}")
 
+    # Método para buscar y mostrar el historial médico de un paciente según el DNI.
     def buscar_historial(self):
         self.lista_historial.clear()
         dni = self.input_dni.text().strip()
@@ -167,6 +184,7 @@ class HistorialMedico(QWidget):
             self.lista_historial.addItem("Sin historial médico.")
             return
 
+        # Mostrar cada consulta en la lista con formato claro y visual.
         for consulta in paciente._Paciente__historial:
             texto = (
                 f"📅 {consulta.fecha} | Doctor: {consulta.doctor.get_nombre()}\n"

@@ -15,12 +15,16 @@ from forms.form_cita import FormCita
 from views.notificaciones import Notificaciones
 from views.configuracion import Configuracion
 
+# Definición de la ventana principal del sistema médico
 class MainWindow(QWidget):
+    # Método constructor, inicializa la ventana principal y los componentes.
     def __init__(self, on_logout=None):
         super().__init__()
         self.on_logout = on_logout
         self.setWindowTitle("Sistema Médico")
         self.setGeometry(100, 100, 1000, 600)
+
+        # Estilo general de la ventana
         self.setStyleSheet("""
             QWidget {
                 font-family: 'Segoe UI', 'Arial';
@@ -34,18 +38,21 @@ class MainWindow(QWidget):
             }
         """)
 
+        # Layout principal horizontal que contiene el panel lateral y el contenido principal
         self.layout_principal = QHBoxLayout(self)
         self.crear_panel_lateral()
         self.crear_contenido()
 
-        self.layout_principal.addLayout(self.panel_lateral, 1)
-        self.layout_principal.addWidget(self.stack, 4)
-        self.stack.setCurrentIndex(0)
+        self.layout_principal.addLayout(self.panel_lateral, 1)  # Panel lateral ocupa 1 parte
+        self.layout_principal.addWidget(self.stack, 4)          # Contenido principal ocupa 4 partes
+        self.stack.setCurrentIndex(0)                            # Mostrar pantalla inicial
 
+    # Crea el panel lateral con botones para navegar entre secciones
     def crear_panel_lateral(self):
         self.panel_lateral = QVBoxLayout()
         self.panel_lateral.setSpacing(10)
 
+        # Lista de botones con texto y función asociada
         botones = [
             ("Inicio", self.mostrar_inicio),
             ("Registrar Paciente", self.mostrar_form_paciente),
@@ -60,6 +67,7 @@ class MainWindow(QWidget):
             ("Configuración", self.mostrar_configuracion),
         ]
 
+        # Crear y configurar cada botón
         for texto, funcion in botones:
             btn = QPushButton(texto)
             btn.clicked.connect(funcion)
@@ -105,8 +113,9 @@ class MainWindow(QWidget):
                 """)
             self.panel_lateral.addWidget(btn)
 
-        self.panel_lateral.addStretch()
+        self.panel_lateral.addStretch()  # Añade espacio flexible
 
+        # Botón para cerrar sesión
         btn_logout = QPushButton("Cerrar Sesión")
         btn_logout.setStyleSheet("""
             QPushButton {
@@ -125,11 +134,12 @@ class MainWindow(QWidget):
         btn_logout.clicked.connect(self.logout)
         self.panel_lateral.addWidget(btn_logout)
 
+    # Crea el área principal que cambia entre distintas páginas usando QStackedWidget
     def crear_contenido(self):
         self.stack = QStackedWidget()
         self.notificaciones_widget = Notificaciones()
 
-        # Página de inicio con imagen y bienvenida
+        # Página inicial con imagen y mensaje de bienvenida
         inicio_widget = QWidget()
         inicio_layout = QVBoxLayout(inicio_widget)
 
@@ -167,7 +177,7 @@ class MainWindow(QWidget):
 
         self.stack.addWidget(inicio_widget)
 
-        # Crear widgets una vez
+        # Instanciación de los widgets de las diferentes secciones una sola vez
         self.form_paciente = FormPaciente(notificaciones_widget=self.notificaciones_widget)
         self.form_doctor = FormDoctor(notificaciones_widget=self.notificaciones_widget)
         self.lista_pacientes_widget = ListaPacientes()
@@ -178,18 +188,19 @@ class MainWindow(QWidget):
         self.historial_widget = HistorialMedico()
         self.configuracion_widget = Configuracion()
 
-        self.stack.addWidget(self.form_paciente)          # 1
-        self.stack.addWidget(self.form_doctor)            # 2
-        self.stack.addWidget(self.lista_pacientes_widget) # 3
-        self.stack.addWidget(self.lista_doctores_widget)  # 4
-        self.stack.addWidget(self.form_cita)              # 5
-        self.stack.addWidget(self.lista_citas_widget)     # 6
-        self.stack.addWidget(self.form_consulta)          # 7
-        self.stack.addWidget(self.historial_widget)       # 8
-        self.stack.addWidget(self.notificaciones_widget)  # 9
-        self.stack.addWidget(self.configuracion_widget)   # 10
+        # Agrega cada widget al stack en orden fijo para poder cambiar entre ellos fácilmente
+        self.stack.addWidget(self.form_paciente)          # índice 1
+        self.stack.addWidget(self.form_doctor)            # índice 2
+        self.stack.addWidget(self.lista_pacientes_widget) # índice 3
+        self.stack.addWidget(self.lista_doctores_widget)  # índice 4
+        self.stack.addWidget(self.form_cita)              # índice 5
+        self.stack.addWidget(self.lista_citas_widget)     # índice 6
+        self.stack.addWidget(self.form_consulta)          # índice 7
+        self.stack.addWidget(self.historial_widget)       # índice 8
+        self.stack.addWidget(self.notificaciones_widget)  # índice 9
+        self.stack.addWidget(self.configuracion_widget)   # índice 10
 
-    # Funciones para mostrar secciones (actualiza datos)
+    # Métodos para mostrar cada sección (actualiza la página visible)
     def mostrar_inicio(self):
         self.stack.setCurrentIndex(0)
 
@@ -200,12 +211,14 @@ class MainWindow(QWidget):
         self.stack.setCurrentIndex(2)
 
     def mostrar_lista_pacientes(self):
+        # Recarga la lista para reflejar posibles cambios y muestra la página
         self.stack.removeWidget(self.lista_pacientes_widget)
         self.lista_pacientes_widget = ListaPacientes()
         self.stack.insertWidget(3, self.lista_pacientes_widget)
         self.stack.setCurrentIndex(3)
 
     def mostrar_lista_doctores(self):
+        # Recarga la lista para reflejar posibles cambios y muestra la página
         self.stack.removeWidget(self.lista_doctores_widget)
         self.lista_doctores_widget = ListaDoctores()
         self.stack.insertWidget(4, self.lista_doctores_widget)
@@ -215,6 +228,7 @@ class MainWindow(QWidget):
         self.stack.setCurrentIndex(5)
 
     def mostrar_lista_citas(self):
+        # Recarga la lista para reflejar posibles cambios y muestra la página
         self.stack.removeWidget(self.lista_citas_widget)
         self.lista_citas_widget = ListaCitas()
         self.stack.insertWidget(6, self.lista_citas_widget)
@@ -232,6 +246,7 @@ class MainWindow(QWidget):
     def mostrar_configuracion(self):
         self.stack.setCurrentIndex(10)
 
+    # Cierra la ventana y ejecuta función opcional para cerrar sesión
     def logout(self):
         self.close()
         if self.on_logout:

@@ -8,7 +8,7 @@ class Notificaciones(QWidget):
 
         layout = QVBoxLayout()
 
-        # Estilo para el título
+        # Título con estilo para el encabezado
         titulo = QLabel("Centro de Notificaciones")
         titulo.setStyleSheet("""
             QLabel {
@@ -21,7 +21,7 @@ class Notificaciones(QWidget):
         titulo.setAlignment(Qt.AlignCenter)
         layout.addWidget(titulo)
 
-        # Lista de notificaciones con estilo
+        # Lista para mostrar las notificaciones
         self.lista_notificaciones = QListWidget()
         self.lista_notificaciones.setStyleSheet("""
             QListWidget {
@@ -43,7 +43,7 @@ class Notificaciones(QWidget):
         """)
         layout.addWidget(self.lista_notificaciones)
 
-        # Cargar notificaciones desde el archivo JSON
+        # Cargar notificaciones desde archivo JSON
         import os, json
         ruta_json = os.path.join(os.path.dirname(os.path.dirname(__file__)), "config", "notificaciones.json")
         if os.path.exists(ruta_json):
@@ -57,9 +57,8 @@ class Notificaciones(QWidget):
         else:
             self.lista_notificaciones.addItem("No hay notificaciones guardadas.")
 
-        # Botón para eliminar notificación seleccionada
-        from PyQt5.QtWidgets import QPushButton, QMessageBox
-        from PyQt5.QtWidgets import QHBoxLayout, QPushButton, QMessageBox, QWidget
+        # Botón para eliminar notificación seleccionada con estilo y centrado
+        from PyQt5.QtWidgets import QPushButton, QMessageBox, QHBoxLayout
         btn_eliminar = QPushButton("Eliminar")
         btn_eliminar.setStyleSheet("""
             QPushButton {
@@ -79,7 +78,7 @@ class Notificaciones(QWidget):
             }
         """)
         btn_eliminar.clicked.connect(self.eliminar_notificacion)
-        # Centrar el botón en la parte inferior
+
         hbox = QHBoxLayout()
         hbox.addStretch(1)
         hbox.addWidget(btn_eliminar)
@@ -88,17 +87,24 @@ class Notificaciones(QWidget):
 
         self.setLayout(layout)
 
+    # Método para eliminar la notificación seleccionada tras confirmación del usuario
     def eliminar_notificacion(self):
         from PyQt5.QtWidgets import QMessageBox
         fila = self.lista_notificaciones.currentRow()
         if fila >= 0:
-            reply = QMessageBox.question(self, "Eliminar notificación", "¿Seguro que deseas eliminar la notificación seleccionada?", QMessageBox.Yes | QMessageBox.No)
+            reply = QMessageBox.question(
+                self,
+                "Eliminar notificación",
+                "¿Seguro que deseas eliminar la notificación seleccionada?",
+                QMessageBox.Yes | QMessageBox.No
+            )
             if reply == QMessageBox.Yes:
-                self.lista_notificaciones.takeItem(fila)
-                self.guardar_notificaciones()
+                self.lista_notificaciones.takeItem(fila)  # Elimina el item de la lista visual
+                self.guardar_notificaciones()            # Guarda los cambios en el archivo JSON
         else:
             QMessageBox.information(self, "Eliminar", "Selecciona una notificación para eliminar.")
 
+    # Guarda la lista actual de notificaciones en el archivo JSON
     def guardar_notificaciones(self):
         import os, json
         ruta_json = os.path.join(os.path.dirname(os.path.dirname(__file__)), "config", "notificaciones.json")
@@ -107,7 +113,9 @@ class Notificaciones(QWidget):
             with open(ruta_json, "w", encoding="utf-8") as f:
                 json.dump(notificaciones, f, ensure_ascii=False, indent=2)
         except Exception as e:
+            # Aquí puedes agregar logging o manejo de errores si quieres
             pass
 
+    # Permite agregar una notificación nueva a la lista
     def agregar_notificacion(self, mensaje):
         self.lista_notificaciones.addItem(mensaje)

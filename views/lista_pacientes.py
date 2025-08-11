@@ -5,13 +5,15 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 from data_manager import cargar_datos, guardar_datos
 
+# Definición de la clase ListaPacientes
 class ListaPacientes(QWidget):
+    # Método constructor, inicializa la ventana y sus widgets.
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Lista de Pacientes")
         self.setGeometry(200, 200, 600, 450)
 
-        # Estilo de fondo general
+        # Estilo general de la ventana
         self.setStyleSheet("""
             QWidget {
                 background-color: #ecf0f1;
@@ -21,6 +23,7 @@ class ListaPacientes(QWidget):
             }
         """)
 
+        # Carga los datos iniciales desde el archivo
         self.pacientes, self.doctores, self.citas = cargar_datos()
 
         layout_exterior = QVBoxLayout()
@@ -37,6 +40,7 @@ class ListaPacientes(QWidget):
         """)
         tarjeta_layout = QVBoxLayout(tarjeta)
 
+        # Título principal
         titulo = QLabel("Lista de Pacientes Registrados")
         titulo.setAlignment(Qt.AlignCenter)
         titulo.setStyleSheet("""
@@ -49,6 +53,7 @@ class ListaPacientes(QWidget):
         """)
         tarjeta_layout.addWidget(titulo)
 
+        # Lista para mostrar los pacientes
         self.lista = QListWidget()
         self.lista.setStyleSheet("""
             QListWidget {
@@ -67,8 +72,11 @@ class ListaPacientes(QWidget):
         """)
 
         tarjeta_layout.addWidget(self.lista)
+
+        # Cargar y mostrar la lista de pacientes
         self.actualizar_lista()
 
+        # Botón para eliminar paciente seleccionado
         btn_eliminar = QPushButton("Eliminar Paciente")
         btn_eliminar.setStyleSheet("""
             QPushButton {
@@ -84,7 +92,6 @@ class ListaPacientes(QWidget):
                 background-color: #c0392b;
             }
         """)
-
         btn_eliminar.clicked.connect(self.eliminar_paciente)
 
         btn_layout = QHBoxLayout()
@@ -99,6 +106,7 @@ class ListaPacientes(QWidget):
 
         self.setLayout(layout_exterior)
 
+    # Método para actualizar la lista visual de pacientes.
     def actualizar_lista(self):
         self.lista.clear()
         for p in self.pacientes:
@@ -107,6 +115,7 @@ class ListaPacientes(QWidget):
             nacimiento = p._Paciente__fecha_nacimiento
             self.lista.addItem(f"🙋🏻‍♂️ Nombre: {nombre} | DNI: {dni} | Nacimiento: {nacimiento}")
 
+    # Método para eliminar el paciente seleccionado y actualizar los datos almacenados.
     def eliminar_paciente(self):
         fila = self.lista.currentRow()
         if fila >= 0:

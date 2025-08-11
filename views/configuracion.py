@@ -3,15 +3,18 @@ import json
 from PyQt5.QtWidgets import QWidget, QLabel, QVBoxLayout, QComboBox, QCheckBox, QPushButton, QMessageBox, qApp
 from PyQt5.QtCore import Qt
 
-CONFIG_FILE = "config/config.json"
+CONFIG_FILE = "config/config.json"  # Ruta donde se guardará la configuración.
 
+# Definición de la clase Configuracion
 class Configuracion(QWidget):
+    # Método constructor de la clase, inicializa la ventana de configuración.
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Configuración del sistema")
 
         layout = QVBoxLayout()
 
+        # Título de la ventana
         label = QLabel("Configuración del sistema")
         label.setAlignment(Qt.AlignCenter)
         label.setStyleSheet("""
@@ -28,14 +31,17 @@ class Configuracion(QWidget):
         group = QGroupBox("Opciones de configuración")
         group_layout = QFormLayout()
 
+        # Selector de tema (claro u oscuro)
         self.temaCombo = QComboBox()
         self.temaCombo.addItems(["Claro", "Oscuro"])
         self.temaCombo.currentTextChanged.connect(self.cambiar_tema_en_tiempo_real)
         group_layout.addRow(QLabel("Tema"), self.temaCombo)
 
+        # Checkbox para activar o desactivar notificaciones
         self.notificacionesCheck = QCheckBox("Activar notificaciones")
         group_layout.addRow(QLabel("Notificaciones"), self.notificacionesCheck)
 
+        # Botón para guardar configuración
         guardarBtn = QPushButton("Guardar configuración")
         guardarBtn.clicked.connect(self.guardar_configuracion)
         group_layout.addRow(guardarBtn)
@@ -46,6 +52,7 @@ class Configuracion(QWidget):
         self.setLayout(layout)
         self.cargar_configuracion()
 
+    # Método para aplicar un tema visual a la aplicación.
     def aplicar_tema(self, tema):
         if tema == "Oscuro":
             qApp.setStyleSheet("""
@@ -63,9 +70,11 @@ class Configuracion(QWidget):
         else:
             qApp.setStyleSheet("")
 
+    # Método que cambia el tema en tiempo real según la selección del usuario.
     def cambiar_tema_en_tiempo_real(self, nuevo_tema):
         self.aplicar_tema(nuevo_tema)
 
+    # Método para cargar la configuración guardada desde el archivo.
     def cargar_configuracion(self):
         if os.path.exists(CONFIG_FILE):
             with open(CONFIG_FILE, "r") as f:
@@ -74,6 +83,7 @@ class Configuracion(QWidget):
                 self.notificacionesCheck.setChecked(config.get("notificaciones", True))
                 self.aplicar_tema(self.temaCombo.currentText())
 
+    # Método para guardar la configuración actual en un archivo.
     def guardar_configuracion(self):
         config = {
             "tema": self.temaCombo.currentText(),

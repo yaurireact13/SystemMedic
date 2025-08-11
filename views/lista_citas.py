@@ -4,11 +4,15 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 from data_manager import cargar_datos
 
+# Definición de la clase ListaCitas
 class ListaCitas(QWidget):
+    # Método para recargar las citas desde el archivo y actualizar la lista visual.
     def recargar_citas(self):
         from data_manager import cargar_datos
         self.pacientes, self.doctores, self.citas = cargar_datos()
         self.actualizar_lista()
+
+    # Método constructor, inicializa la ventana y sus widgets.
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Citas Agendadas")
@@ -37,6 +41,7 @@ class ListaCitas(QWidget):
         """)
         tarjeta_layout = QVBoxLayout(tarjeta)
 
+        # Título principal
         titulo = QLabel("Citas Agendadas")
         titulo.setAlignment(Qt.AlignCenter)
         titulo.setStyleSheet("""
@@ -49,6 +54,7 @@ class ListaCitas(QWidget):
         """)
         tarjeta_layout.addWidget(titulo)
 
+        # Lista para mostrar las citas
         self.lista = QListWidget()
         self.lista.setStyleSheet("""
             QListWidget {
@@ -67,13 +73,14 @@ class ListaCitas(QWidget):
             }
         """)
 
-        # Recargar desde archivo
+        # Cargar datos iniciales y actualizar lista
         self.pacientes, self.doctores, self.citas = cargar_datos()
         self.actualizar_lista()
 
         tarjeta_layout.addWidget(self.lista)
 
         from PyQt5.QtWidgets import QPushButton, QHBoxLayout, QMessageBox
+        # Botón para eliminar una cita seleccionada
         btn_eliminar = QPushButton("Eliminar Cita")
         btn_eliminar.setStyleSheet("""
             QPushButton {
@@ -90,6 +97,7 @@ class ListaCitas(QWidget):
             }
         """)
         btn_eliminar.clicked.connect(self.eliminar_cita)
+
         btn_layout = QHBoxLayout()
         btn_layout.addStretch()
         btn_layout.addWidget(btn_eliminar)
@@ -101,6 +109,7 @@ class ListaCitas(QWidget):
         layout_exterior.addStretch()
         self.setLayout(layout_exterior)
 
+    # Método para actualizar la lista de citas mostrada.
     def actualizar_lista(self):
         self.lista.clear()
         if not self.citas:
@@ -114,6 +123,7 @@ class ListaCitas(QWidget):
                 )
                 self.lista.addItem(texto)
 
+    # Método para eliminar la cita seleccionada de la lista y el archivo.
     def eliminar_cita(self):
         fila = self.lista.currentRow()
         if fila >= 0 and self.citas:

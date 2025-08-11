@@ -4,7 +4,9 @@ from PyQt5.QtWidgets import (
 from PyQt5.QtCore import Qt
 from data_manager import cargar_datos
 
+# Definición de la clase ListaDoctores
 class ListaDoctores(QWidget):
+    # Método constructor, inicializa la ventana y sus widgets.
     def __init__(self):
         super().__init__()
         self.setWindowTitle("Lista de Doctores")
@@ -33,6 +35,7 @@ class ListaDoctores(QWidget):
         """)
         tarjeta_layout = QVBoxLayout(tarjeta)
 
+        # Título principal
         titulo = QLabel("Doctores Registrados")
         titulo.setAlignment(Qt.AlignCenter)
         titulo.setStyleSheet("""
@@ -45,6 +48,7 @@ class ListaDoctores(QWidget):
         """)
         tarjeta_layout.addWidget(titulo)
 
+        # Lista para mostrar los doctores
         self.lista = QListWidget()
         self.lista.setStyleSheet("""
             QListWidget {
@@ -62,12 +66,13 @@ class ListaDoctores(QWidget):
             }
         """)
 
-        # Cargar desde archivo
+        # Cargar la lista de doctores desde el archivo
         self.doctores = cargar_datos()[1]
         self.actualizar_lista()
 
         tarjeta_layout.addWidget(self.lista)
 
+        # Botón para eliminar un doctor seleccionado
         btn_eliminar = QPushButton("Eliminar Doctor")
         btn_eliminar.setStyleSheet("""
             QPushButton {
@@ -85,7 +90,6 @@ class ListaDoctores(QWidget):
         """)
         btn_eliminar.clicked.connect(self.eliminar_doctor)
 
-        from PyQt5.QtWidgets import QHBoxLayout
         btn_layout = QHBoxLayout()
         btn_layout.addStretch()
         btn_layout.addWidget(btn_eliminar)
@@ -97,6 +101,7 @@ class ListaDoctores(QWidget):
         layout_exterior.addStretch()
         self.setLayout(layout_exterior)
 
+    # Método para actualizar la lista visual de doctores.
     def actualizar_lista(self):
         self.lista.clear()
         if self.doctores:
@@ -105,6 +110,7 @@ class ListaDoctores(QWidget):
         else:
             self.lista.addItem("No hay doctores registrados.")
 
+    # Método para eliminar el doctor seleccionado y actualizar los datos almacenados.
     def eliminar_doctor(self):
         fila = self.lista.currentRow()
         if fila >= 0 and self.doctores:
@@ -113,7 +119,7 @@ class ListaDoctores(QWidget):
             if confirm == QMessageBox.Yes:
                 del self.doctores[fila]
                 from data_manager import guardar_datos, cargar_datos
-                # Recargar pacientes y citas para no perder datos
+                # Recargar pacientes y citas para mantener consistencia
                 pacientes, _, citas = cargar_datos()
                 guardar_datos(pacientes, self.doctores, citas)
                 self.actualizar_lista()

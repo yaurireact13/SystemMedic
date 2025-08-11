@@ -6,16 +6,23 @@ from PyQt5.QtCore import Qt
 from data_manager import guardar_datos, cargar_datos
 from models.paciente import Paciente
 
+# Carga inicial de datos (pacientes, doctores y citas) desde el almacenamiento JSON
 pacientes, doctores, citas = cargar_datos()
 
 class FormPaciente(QWidget):
     def __init__(self, notificaciones_widget=None):
+        """
+        Constructor de la ventana de registro de pacientes.
+        
+        Parámetros:
+        - notificaciones_widget: Widget opcional para mostrar mensajes de notificación.
+        """
         super().__init__()
         self.notificaciones_widget = notificaciones_widget
         self.setWindowTitle("Registrar Paciente")
         self.setGeometry(150, 150, 500, 400)
 
-        # Fondo general gris claro
+        # Estilo general del fondo
         self.setStyleSheet("""
             QWidget {
                 background-color: #ecf0f1;
@@ -25,10 +32,11 @@ class FormPaciente(QWidget):
             }
         """)
 
+        # Layout principal
         layout_exterior = QVBoxLayout()
         layout_exterior.setAlignment(Qt.AlignCenter)
 
-        # Tarjeta blanca
+        # Tarjeta blanca central para el formulario
         tarjeta = QFrame()
         tarjeta.setStyleSheet("""
             QFrame {
@@ -40,7 +48,7 @@ class FormPaciente(QWidget):
         """)
         tarjeta_layout = QVBoxLayout(tarjeta)
 
-        # Título
+        # Título principal
         titulo = QLabel("Registro de Paciente")
         titulo.setAlignment(Qt.AlignCenter)
         titulo.setStyleSheet("""
@@ -53,10 +61,11 @@ class FormPaciente(QWidget):
         """)
         tarjeta_layout.addWidget(titulo)
 
-        # Formulario
+        # Layout del formulario
         form_layout = QFormLayout()
         form_layout.setSpacing(15)
 
+        # Estilo de los campos de entrada
         estilo_input = """
             QLineEdit {
                 padding: 10px;
@@ -67,18 +76,22 @@ class FormPaciente(QWidget):
             }
         """
 
+        # Campos de entrada
         self.input_nombre = QLineEdit()
         self.input_dni = QLineEdit()
         self.input_fecha = QLineEdit()
 
+        # Aplicar estilo
         self.input_nombre.setStyleSheet(estilo_input)
         self.input_dni.setStyleSheet(estilo_input)
         self.input_fecha.setStyleSheet(estilo_input)
 
+        # Placeholders
         self.input_nombre.setPlaceholderText("Ej. Juan Pérez")
         self.input_dni.setPlaceholderText("Ej. 12345678")
         self.input_fecha.setPlaceholderText("dd-mm-aaaa")
 
+        # Añadir campos al formulario
         form_layout.addRow("Nombre:", self.input_nombre)
         form_layout.addRow("DNI:", self.input_dni)
         form_layout.addRow("Fecha de nacimiento:", self.input_fecha)
@@ -102,42 +115,57 @@ class FormPaciente(QWidget):
             }
         """)
 
+        # Alineación del botón
         btn_layout = QHBoxLayout()
         btn_layout.addStretch()
         btn_layout.addWidget(self.btn_guardar)
         btn_layout.addStretch()
         tarjeta_layout.addLayout(btn_layout)
 
-        # Conexión y layout final
+        # Conectar el botón a la función de guardado
         self.btn_guardar.clicked.connect(self.guardar_paciente)
 
+        # Estructura final de la ventana
         layout_exterior.addStretch()
         layout_exterior.addWidget(tarjeta)
         layout_exterior.addStretch()
         self.setLayout(layout_exterior)
 
     def guardar_paciente(self):
+        """
+        Valida y guarda un nuevo paciente en la base de datos.
+        - Verifica que todos los campos estén completos.
+        - Evita duplicados por DNI.
+        - Guarda en formato JSON y muestra mensajes de éxito o error.
+        """
         nombre = self.input_nombre.text().strip()
         dni = self.input_dni.text().strip()
         fecha = self.input_fecha.text().strip()
 
+        # Validación de campos vacíos
         if not nombre or not dni or not fecha:
             QMessageBox.warning(self, "Error", "Completa todos los campos.")
             return
 
+        # Validar DNI duplicado
         for paciente in pacientes:
             if paciente.dni == dni:
                 QMessageBox.warning(self, "Error", f"El DNI '{dni}' ya está registrado.")
                 return
 
+        # Crear y guardar paciente
         nuevo_paciente = Paciente(nombre, dni, fecha)
         pacientes.append(nuevo_paciente)
         guardar_datos(pacientes, doctores, citas)
 
+        # Notificación opcional
         if self.notificaciones_widget:
             self.notificaciones_widget.agregar_notificacion(f"Paciente registrado: {nombre}")
 
+        # Mensaje de éxito
         QMessageBox.information(self, "Éxito", "Paciente registrado correctamente.")
+
+        # Limpiar campos
         self.input_nombre.clear()
         self.input_dni.clear()
         self.input_fecha.clear()
