@@ -152,12 +152,12 @@ class MainWindow(QWidget):
                 font-size: 32px;
                 font-weight: bold;
                 font-family: 'Segoe UI', 'Arial';
-                color: #2c3e50;
+                color: #3399FF;
                 margin-top: 30px;
             }
         """)
 
-        pixmap = QPixmap("resources/principal.jpg")
+        pixmap = QPixmap("resources/diseño_estructura_inicial.jpg")
         pixmap = pixmap.scaled(700, 500, Qt.KeepAspectRatio, Qt.SmoothTransformation)
         label_imagen.setPixmap(pixmap)
         label_imagen.setStyleSheet("""

@@ -10,6 +10,12 @@
                     "doctor": "daniel",
                     "sintomas": "dolor de garganta",
                     "tratamiento": "antiinflamatorio y panadol"
+                },
+                {
+                    "fecha": "15-08-2025",
+                    "doctor": "daniel",
+                    "sintomas": "Dolor de estomago",
+                    "tratamiento": "Tomar medicamentos"
                 }
             ]
         },
