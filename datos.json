@@ -16,6 +16,12 @@
                     "doctor": "daniel",
                     "sintomas": "Dolor de estomago",
                     "tratamiento": "Tomar medicamentos"
+                },
+                {
+                    "fecha": "22-08-2025",
+                    "doctor": "daniel",
+                    "sintomas": "Dolor de estomago",
+                    "tratamiento": "Pastillas y agua caliente"
                 }
             ]
         },
